@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EditorComponent } from './components/editor/editor.component';
 
 const routes: Routes = [
   {
     path:'',
-    loadChildren: () => import('./modules/editor/editor.module').then(m => m.EditorModule)
+    component:EditorComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class EditorRoutingModule { }
