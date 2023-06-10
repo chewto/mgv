@@ -25,6 +25,7 @@ main{
       padding: 10px 10px;
       font-size: 18px;
       color: $textColor;
+      border-radius: 5px;
 
       &:focus{
         outline: none;

@@ -2,9 +2,9 @@
   <section class="editor-container">
     <div class="editor-actions-container">
       <button (click)="copy()" class="btn-action">copiar</button>
-      <button class="btn-action">voice</button>
+      <button (click)="onVoice()" class="btn-action">voice</button>
     </div>
-    <textarea (keyup)="onKeyup()" class="editor" #editor></textarea>
+    <textarea (keyup)="onKeyup()" (keydown)="onKeydown($event)" class="editor" #editor  [formControl]="editorInput"></textarea>
   </section>
   <section class="output-container">
     <iframe srcdoc="output" #output class="output"></iframe>
