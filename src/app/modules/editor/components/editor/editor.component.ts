@@ -15,10 +15,6 @@ export class EditorComponent {
   @ViewChild('editor') editor!:ElementRef;
   @ViewChild('output') output!:ElementRef;
 
-  private reservedWordsHTML:string[] = [
-    'html',
-  ]
-
   constructor(
     private speechDetectionSVC:SpeechDetectionService,
     private speechTreatmentSVC:SpeechTreatmentService,
@@ -72,10 +68,15 @@ export class EditorComponent {
 
   private voiceTreatment(words:string): any{
 
-    let transpileWords = words.split(' ');
+    let transpileWords = words.toLocaleLowerCase()
+      .replace(/á/,"a")
+      .replace(/é/,"e")
+      .replace(/í/,"i")
+      .replace(/ó/,"o")
+      .replace(/ú/,"u").split(' ');
     let finalCommand = ''
 
-    if(transpileWords[0] === 'html'){
+    if(transpileWords[0] === 'etiqueta'){
       console.log('vas a usar html')
       finalCommand += this.speechTreatmentSVC.htmlTranspile(transpileWords);
     } else if(transpileWords[0] === 'programar'){
