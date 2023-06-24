@@ -1,11 +1,11 @@
+import { HtmlTag } from '@interfaces/htmltag.interface';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SpeechTreatmentService {
-
-  constructor() { }
+  constructor() {}
 
   private htmlReservedWords = [
     'script',
@@ -41,74 +41,122 @@ export class SpeechTreatmentService {
     'span',
     'mark',
     'br',
-    'img',
+    'imagen',
     'video',
     'audio',
     'source',
-    'svg',
     'form',
     'label',
     'input',
     'button',
     'select',
     'option',
-    'textarea'
-  ]
+    'textarea',
+  ];
 
+  private htmlTagsNoClass = [
+    'html',
+    'head',
+    'link',
+    'title',
+    'meta',
+    'style',
+    'script',
+  ];
 
-  public htmlTranspile(html:string[]): any{
+  public htmlTranspile(html: string[]): any {
     let htmlWords = html;
+    let htmlWordsCopy:string[]= [];
 
-    console.log(htmlWords)
+    console.log(htmlWords);
 
-    let tagType = htmlWords[1];
+    let htmlTagStructure:HtmlTag = {
+      tag: '',
+      class: '',
+      value: ''
+    }
 
-    let htmlTag = '';
-
-    let classValue = '';
-
+    let tag = '';
+    let tagClass = '';
     let tagValue = '';
 
-    if(
-      tagType === 'html'
-      || tagType === 'head'
-      || tagType === 'link'
-      || tagType === 'title'
-      || tagType === 'meta'
-      || tagType === 'style'
-      || tagType === 'script'
-    ){
-      htmlTag += `<${tagType}></${tagType}>`;
-    } else if(tagType === 'imagen'){
-      htmlTag += `<img src="">`;
-    } else if(tagType === 'video' || tagType === 'audio'){
-      htmlTag += `<${tagType} src=""></${tagType}>`;
-    } else {
-      for (let index = 0; index < htmlWords.length; index++) {
-        const value = htmlWords[index];
-        if(value === 'clase'){
-          let indexClass = htmlWords.indexOf(value) + 1;
-          classValue += htmlWords[indexClass];
-        }
-        if(value === 'valor'){
-          let indexClass = htmlWords.indexOf(value) + 1;
-          tagValue += htmlWords[indexClass];
+    htmlWords.forEach((element) => {
+      let indexValue = 0;
+      let indexClass = 0;
+      let indexTag = 0;
+
+      if(element === 'etiqueta'){
+        indexTag = htmlWords.indexOf(element);
+        if(this.htmlReservedWords.includes(htmlWords[indexTag +1])){
+          htmlTagStructure.tag = htmlWords[indexTag + 1];
+          tag = htmlTagStructure.tag;
         }
       }
 
-      htmlTag += `<${tagType} class="${classValue}">${tagValue}</${tagType}>`
+      if(element === 'valor'){
+        indexValue = htmlWords.indexOf(element);
+        if(htmlWords[indexValue + 1] == undefined){
+          htmlTagStructure.value = '';
+          tagValue = htmlTagStructure.value;
+        } else{
+          let tempValue = ''
+          htmlWordsCopy = htmlWords.slice(indexValue + 1);
+          htmlWordsCopy.forEach(element => {
+            tempValue += `${element} `
+            console.log(element)
+          })
+          htmlTagStructure.value = tempValue;
+          tagValue = htmlTagStructure.value;
+        }
+      }
+
+      if(element === 'clase'){
+        indexClass = htmlWords.indexOf(element);
+        if(htmlWords[indexClass + 1] === 'valor'){
+          tagClass = `class=""`
+        }
+        if(htmlWords[indexClass + 1] !== 'valor'){
+          htmlTagStructure.class = htmlWords[indexClass + 1];
+          tagClass = `class="${htmlTagStructure.class}"`
+        }
+      }
+    });
+
+    console.log(htmlWordsCopy)
+    console.log(htmlTagStructure)
+
+    let htmlTag = '';
+    console.log(tag);
+
+    if (this.htmlTagsNoClass.includes(tag)) {
+      htmlTag += `<${tag}></${tag}>`;
+    }
+
+    if (tag === 'video' || tag === 'audio') {
+      htmlTag += `<${tag} ${tagClass} src=""></${tag}>`;
+    }
+
+    if (
+      !this.htmlTagsNoClass.includes(tag) &&
+      this.htmlReservedWords.includes(tag)
+    ) {
+      if (tag === 'imagen') {
+        htmlTag += `<img ${tagClass} src="">`;
+      } else {
+        htmlTag += `<${tag} ${tagClass}>${tagValue}</${tag}>`;
+      }
     }
 
     return htmlTag;
   }
 
-  public jsTranspile(js:string[]){
+  public jsTranspile(js: string[]) {
     let jsWords = js;
 
     return jsWords;
   }
 
-  public cssTranspile(css:string[]){
+  public cssTranspile(css: string[]) {
     let cssWords = css;
 
     return cssWords;
