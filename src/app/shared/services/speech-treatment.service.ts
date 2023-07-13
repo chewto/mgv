@@ -1,6 +1,6 @@
 import { HtmlTag } from '@interfaces/htmltag.interface';
 import { Injectable } from '@angular/core';
-import { Func, JSCommnand, Var } from '@interfaces/jscommand.interface';
+import { Func, JSCommnand, Var } from '@interfaces/jscommnad.inteface';
 
 @Injectable({
   providedIn: 'root',
@@ -205,7 +205,7 @@ export class SpeechTreatmentService {
 
     let func: Func = {
       programLine: '',
-      functionName: '',
+      funcName: '',
       funcParams: '',
     };
 
@@ -313,7 +313,7 @@ export class SpeechTreatmentService {
 
         console.log(jsWords[funcName], jsWords[funcParams]);
 
-        func.functionName =
+        func.funcName =
           jsWords[funcName] === undefined ||
           jsWords[funcName] === 'parametros' ||
           jsWords[funcName] === 'parametro'
@@ -324,7 +324,7 @@ export class SpeechTreatmentService {
             ? 'parametroProvisional'
             : funcParamTotal;
 
-        func.programLine = `function ${func.functionName}(${func.funcParams}){
+        func.programLine = `function ${func.funcName}(${func.funcParams}){
 
 }`;
 
