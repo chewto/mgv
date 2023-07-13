@@ -1,5 +1,5 @@
 import { Subject, first } from 'rxjs';
-import { SpeechDetectionService } from './../../../../shared/services/speech-detection.service';
+import { SpeechDetectionService } from '../../../shared/services/speech-detection.service';
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SpeechTreatmentService } from 'src/app/shared/services/speech-treatment.service';
