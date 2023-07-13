@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 
 declare var webkitSpeechRecognition:any;
 
+
 @Injectable({
   providedIn: 'root'
 })

@@ -1,5 +1,5 @@
-export interface HtmlTag{
+export interface HtmlTag {
   tag: string;
   class?: string;
-  value?: string
+  value?: string;
 }
