@@ -12,6 +12,14 @@ const routes: Routes = [
     loadChildren: () => import('./modules/editor/editor.module').then(m => m.EditorModule)
   },
   {
+    path:'documentation',
+    loadChildren: () => import('./modules/documentation/documentation.module').then(m => m.DocumentationModule)
+  },
+  {
+    path:'personalization',
+    loadChildren: () => import('./modules/personalization/personalization.module').then(m => m.PersonalizationModule)
+  },
+  {
     path:'**',
     component: NotFoundComponent
   }
