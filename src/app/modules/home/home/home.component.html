@@ -1,5 +1,22 @@
-<div>
-  <a type="button" routerLink="/editor">editor</a>
-  <a type="button" routerLink="/documentation">documentacion</a>
-  <a type="button" routerLink="/personalization">personalizar</a>
-</div>
+<main class="home">
+  <section>
+    <article>
+      <p
+        [style.color]="userColors.textCodeColor"
+        [style.box-shadow]="'9px 10px 0px 0px' + userColors.textCodeColor"
+        [style.border]="'2px solid' + userColors.textCodeColor"
+      >
+        Bienvenido al editor de codigo con dictado por voz 
+      </p>
+    </article>
+  </section>
+
+  <section>
+    <article class="menu-container">
+      <a [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" type="button" routerLink="/editor" class="btn-menu">editor</a>
+      <a [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" type="button" routerLink="/documentation" class="btn-menu">documentacion</a>
+      <a [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor"type="button" routerLink="/personalization" class="btn-menu">personalizar</a>
+    </article>
+  </section>
+</main>
+<app-footer [backgroundColor]="userColors.firstColor" [textColor]="userColors.textCodeColor"></app-footer>

@@ -1,0 +1,18 @@
+<main>
+  <section class="editor-container">
+    <div class="editor-actions-container">
+      <button [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" (click)="redirectTo()" class="btn-action">volver</button>
+      <button [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" (click)="copy()" class="btn-action">{{copy$ | async}}</button>
+      <button [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" (click)="save()" class="btn-action">{{save$ | async}}</button>
+      <button [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" (click)="onVoice()" class="btn-action">dictador por voz</button>
+      <div class="microphone-state" [style.background-color]="color$ | async"><span>{{active$ | async}}</span></div>
+    </div>
+    <textarea
+    [style.background-color]="userColors.secondColor"
+    [style.color]="userColors.textCodeColor"
+    (keyup)="onKeyup()" (keydown)="onKeydown($event)" class="editor" #editor  [formControl]="editorInput"></textarea>
+  </section>
+  <section class="output-container">
+    <iframe srcdoc="output" #output class="output"></iframe>
+  </section>
+</main>

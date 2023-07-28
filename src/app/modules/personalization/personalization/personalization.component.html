@@ -1,0 +1,25 @@
+<a class="btn-action" routerLink="/" class="btn-action " [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor">volver</a>
+<form [formGroup]="colorsForm" class="colorsForm">
+  <div class="input-container" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor">
+    <label>Color de fondo</label>
+    <input type="color" formControlName="firstColor" />
+  </div>
+  <div class="input-container" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor">
+    <label>Color de fondo del editor</label>
+    <input type="color" formControlName="secondColor" />
+  </div>
+  <div class="input-container" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor"> 
+    <label>Color de los botones</label>
+    <input type="color" formControlName="thirdColor" />
+  </div>
+  <div class="input-container" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor">
+    <label>Color del texto</label>
+    <input type="color" formControlName="textColor" />
+  </div>
+  <div class="input-container" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor">
+    <label>Color de texto del editor</label>
+    <input type="color" formControlName="textCodeColor" />
+  </div>
+  <button (click)="setColor()" class="btn-action" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" [style.margin.px]="20">Aplicar colores</button>
+  <button (click)="resetColors()" class="btn-action" [style.color]="userColors.textColor" [style.background-color]="userColors.thirdColor" [style.margin.px]="20">Resetear colores</button>
+</form>

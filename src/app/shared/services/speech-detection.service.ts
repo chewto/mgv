@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 declare var webkitSpeechRecognition:any;
 
@@ -11,6 +11,11 @@ export class SpeechDetectionService {
 
   public recognition = new webkitSpeechRecognition();
   public text$ = new Subject<string>();
+  public active$ = new BehaviorSubject<string>('microfono inactivo');
+  public color$ = new BehaviorSubject<string>('#ff6358');
+
+  private initialColor = this.color$.getValue();
+  private initialActive = this.active$.getValue();
 
   constructor() { }
 
@@ -22,10 +27,18 @@ export class SpeechDetectionService {
       const transcript = event.results[0][0].transcript;
       this.text$.next(transcript);
     })
+
+    this.recognition.addEventListener('end', (event:any) => {
+      console.log('terminado');
+      this.active$.next(this.initialActive);
+      this.color$.next(this.initialColor);
+    })
   }
 
   public hear():void{
     this.recognition.start();
-    console.log('init')
+    console.log('iniciado')
+    this.active$.next('microfono activo');
+    this.color$.next('#1ce982');
   }
 }
