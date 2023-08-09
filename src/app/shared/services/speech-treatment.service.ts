@@ -30,7 +30,7 @@ export class SpeechTreatmentService {
     'h6',
     'header',
     'footer',
-    'p',
+    'parrafo',
     'hr',
     'ol',
     'ul',
