@@ -1,0 +1,35 @@
+<a
+  routerLink="/"
+  class="btn-action"
+  [style.color]="userColors.textColor"
+  [style.background-color]="userColors.thirdColor"
+  >volver</a
+>
+
+
+<div class="container">
+
+  <div  class="inner-container" [style.background-color]="userColors.thirdColor" [style.color]="userColors.textColor" [ngStyle]="{height: '20%', width: '20%'}">en la documentacion estan los comandos disponibles, es cuestion del usuario testearlos y usarlos a su antojo. Los espacios en blanco representan los valores que puede dar el usuario</div>
+
+  <div class="inner-container" [style.background-color]="userColors.thirdColor" [style.color]="userColors.textColor">
+    <ul *ngFor="let tag of htmlReservedWords">
+      <li>etiqueta {{ tag }} clase ' ' valor ' '</li>
+    </ul>
+  </div>
+
+  <div class="inner-container" [style.background-color]="userColors.thirdColor" [style.color]="userColors.textColor">
+    <ul *ngFor="let programming of programmingReservedWords">
+      <li *ngIf="programming === 'retornar'">progrmar {{ programming }} ' '</li>
+      <li *ngIf="programming === 'constante'">
+        progrmar {{ programming }} valor ' '
+      </li>
+      <li *ngIf="programming === 'variable'">
+        progrmar {{ programming }} valor ' '
+      </li>
+      <li *ngIf="programming === 'funcion'">
+        progrmar {{ programming }} parametros ' '
+      </li>
+      <li>programar {{ programming }}</li>
+    </ul>
+  </div>
+</div>

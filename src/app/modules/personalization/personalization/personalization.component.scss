@@ -1,0 +1,23 @@
+@import url('../../../shared/styles/global-styles.scss');
+
+.colorsForm{
+  margin: 20px auto;
+  width: 80vw;
+  display: grid;
+  place-items: center;
+
+  .input-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 40vw;
+    height: 6vh;
+    margin: 10px 0;
+    padding: 0 10px;
+    border-radius: 4px;
+  }
+}
+.preview-color{
+  width: 60px;
+  height: 40px;
+}

@@ -1,0 +1,7 @@
+<div [style.background-color]="userColors.firstColor" class="container">
+  <h2 [style.color]="userColors.textColor">Deseas salir sin guardar?</h2>
+  <div>
+    <button [style.background-color]="userColors.thirdColor" [style.color]="userColors.textCodeColor" (click)="save()">Guardar</button>
+    <button style="background-color:#E60000; color:#000" (click)="notSave()">No guardar</button>
+  </div>
+</div>
