@@ -1,6 +1,13 @@
 import { takeUntil, first, BehaviorSubject, Subject } from 'rxjs';
 import { SpeechDetectionService } from '../../../../shared/services/speech-detection.service';
-import { Component, ViewChild, ElementRef, Renderer2, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SpeechTreatmentService } from 'src/app/shared/services/speech-treatment.service';
 import { Router } from '@angular/router';
@@ -9,8 +16,7 @@ import { SaveModalComponent } from '../save-modal/save-modal.component';
 import { Colors } from '@interfaces/colors.interface';
 import { ColorsLocalService } from 'src/app/shared/services/colors-local.service';
 
-
-interface Save{
+interface Save {
   initialValue: unknown;
   finalValue: unknown;
 }
@@ -19,29 +25,23 @@ interface Save{
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
 })
-export class EditorComponent implements OnInit, OnDestroy{
-
+export class EditorComponent implements OnInit, OnDestroy {
   private localStorage = window.localStorage;
 
   public editorInput = new FormControl('');
-
-  private savePremonition:Save = {
-    initialValue: 0,
-    finalValue: 0
-  }
 
   public color$ = this.speechDetectionSVC.color$;
   public active$ = this.speechDetectionSVC.active$;
 
   public copy$ = new BehaviorSubject<string>('copiar');
   public save$ = new BehaviorSubject<string>('guardar');
-  
+
   private copyInitialValue = this.copy$.getValue();
   private saveInitialValue = this.save$.getValue();
 
   private destroy$ = new Subject<void>();
 
-  public userColors!:Colors;
+  public userColors!: Colors;
 
   @ViewChild('editor') editor!: ElementRef;
   @ViewChild('output') output!: ElementRef;
@@ -51,51 +51,43 @@ export class EditorComponent implements OnInit, OnDestroy{
     private speechTreatmentSVC: SpeechTreatmentService,
     private router: Router,
     public saveDialog: MatDialog,
-    public colors:ColorsLocalService
+    public colors: ColorsLocalService
   ) {
     this.speechDetectionSVC.start();
   }
 
   ngOnInit(): void {
-
     const userSettings = this.colors.retriveLocal('userColors');
-    console.log(userSettings)
+    console.log(userSettings);
 
-    if(typeof userSettings === 'string'){
-      this.userColors = JSON.parse(userSettings)
-      console.log(this.userColors)
+    if (typeof userSettings === 'string') {
+      this.userColors = JSON.parse(userSettings);
+      console.log(this.userColors);
     }
 
-    if(userSettings === null){
+    if (userSettings === null) {
       this.userColors = {
         firstColor: '#0B2447',
         secondColor: '#19376D',
         thirdColor: '#A5D7E8',
         textColor: '#19376D',
-        textCodeColor: '#ffffff'}
-      console.log(this.userColors)
+        textCodeColor: '#ffffff',
+      };
+      console.log(this.userColors);
     }
-
 
     const code = this.retrieveLocal('code');
     this.editorInput.setValue(code);
 
-    const codeInitialLength = code?.length
-
-    this.savePremonition.initialValue = codeInitialLength;
-    console.log(this.savePremonition)
-
     this.editorInput.valueChanges
-    .pipe(
-      takeUntil(this.destroy$)
-    )
-    .subscribe((inputChange) => {
-      this.save$.next(this.saveInitialValue);
-      this.copy$.next(this.copyInitialValue);
-    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((inputChange) => {
+        this.save$.next(this.saveInitialValue);
+        this.copy$.next(this.copyInitialValue);
+      });
   }
 
-  public save(): void{
+  public save(): void {
     this.localStorage.setItem('code', this.editor.nativeElement.value);
     this.save$.next('guardado');
   }
@@ -109,79 +101,63 @@ export class EditorComponent implements OnInit, OnDestroy{
     navigator.clipboard.writeText(this.editor.nativeElement.value);
     console.log('clipboard = ' + this.editor.nativeElement.value);
 
-    this.copy$.next('copiado')
+    this.copy$.next('copiado');
   }
 
-  public onVoice(): void{
+  public onVoice(): void {
     this.speechDetectionSVC.hear();
     this.speechDetectionSVC.text$
-    .pipe(
-      first(),
-      takeUntil(this.destroy$)
-    )
-    .subscribe((res) => {
-      console.log(res);
-      const text = this.voiceTreatment(res);
-      const currentText = this.editor.nativeElement.value;
-      this.editor.nativeElement.value = `${currentText} \n${text}`;
-    });
+      .pipe(first(), takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log(res);
+        const text = this.voiceTreatment(res);
+        const currentText = this.editor.nativeElement.value;
+        this.editor.nativeElement.value = `${currentText} \n${text}`;
+      });
 
     console.log(this.editor.nativeElement.innerText);
   }
 
-  public redirectTo(): void{
+  public redirectTo(): void {
+    const codeFinalLength = this.editor.nativeElement.value.length;
+    const code = this.retrieveLocal('code');
+    const codeSaveLength = code.length;
 
-    const codeFinalLength= this.editor.nativeElement.value.length;
+    if (codeFinalLength > codeSaveLength) {
+      const dialogRef = this.saveDialog.open(SaveModalComponent, {
+        width: '240px',
+        height: '160px',
+        data: {
+          colors: this.userColors,
+        },
+        disableClose: true,
+      });
 
-    this.savePremonition.finalValue = codeFinalLength;
-    console.log(this.savePremonition)
-
-    const modalConfig = {
-      width: '200px',
-      height:'160px'
-    }
-
-    if(typeof this.savePremonition.finalValue === 'number' && typeof this.savePremonition.initialValue === 'number'){
-      if(this.savePremonition.finalValue > this.savePremonition.initialValue){
-        const dialogRef = this.saveDialog.open(SaveModalComponent, {
-          width: '240px',
-          height:'160px',
-          data: {
-            colors: this.userColors
-          },
-          disableClose: true
-        });
-
-        dialogRef.afterClosed()
-        .pipe(
-          takeUntil(this.destroy$)
-        )
-        .subscribe((modalResponse:boolean) => {
-          if(modalResponse){
+      dialogRef
+        .afterClosed()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((modalResponse: boolean) => {
+          if (modalResponse) {
             this.save();
             this.router.navigate(['/']);
           }
 
-          if(!modalResponse){
+          if (!modalResponse) {
             this.router.navigate(['/']);
           }
-        })
-      }
-
-      if(this.savePremonition.finalValue === this.savePremonition.initialValue){
-        this.router.navigate(['/']);
-      }
+        });
+    } else {
+      this.router.navigate(['/']);
     }
   }
 
-  public onKeydown(event: KeyboardEvent): void{
+  public onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Tab') {
       event.preventDefault();
 
-
       const textarea = event.target as HTMLTextAreaElement;
       const start = textarea.selectionStart;
-      const end = textarea.selectionEnd ;
+      const end = textarea.selectionEnd;
 
       // console.log(start, end);
 
@@ -221,7 +197,7 @@ export class EditorComponent implements OnInit, OnDestroy{
     return finalCommand;
   }
 
-  private retrieveLocal(key:string): string{
+  private retrieveLocal(key: string): string {
     const retrieveLocalData = this.localStorage.getItem(key);
     return retrieveLocalData ? retrieveLocalData : 'no info';
   }

@@ -2,8 +2,9 @@ import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Colors } from '@interfaces/colors.interface';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ColorsLocalService } from 'src/app/shared/services/colors-local.service';
+
 
 @Component({
   selector: 'app-personalization',
