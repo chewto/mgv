@@ -85,7 +85,7 @@ export class PersonalizationComponent implements OnInit{
   }
 
   private reloadRedict(): void{
-    location.reload();
+    // location.reload();
   }
 
 }
