@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SaveModalComponent } from '../save-modal/save-modal.component';
 import { Colors } from '@interfaces/colors.interface';
+import { ColorsLocalService } from 'src/app/shared/services/colors-local.service';
 
 
 interface Save{
@@ -49,15 +50,31 @@ export class EditorComponent implements OnInit, OnDestroy{
     private speechDetectionSVC: SpeechDetectionService,
     private speechTreatmentSVC: SpeechTreatmentService,
     private router: Router,
-    public saveDialog: MatDialog
+    public saveDialog: MatDialog,
+    public colors:ColorsLocalService
   ) {
     this.speechDetectionSVC.start();
   }
 
   ngOnInit(): void {
-    const userSettings = this.retrieveLocal('userColors');
-    this.userColors = JSON.parse(userSettings);
-    console.log(this.userColors)
+
+    const userSettings = this.colors.retriveLocal('userColors');
+    console.log(userSettings)
+
+    if(typeof userSettings === 'string'){
+      this.userColors = JSON.parse(userSettings)
+      console.log(this.userColors)
+    }
+
+    if(userSettings === null){
+      this.userColors = {
+        firstColor: '#0B2447',
+        secondColor: '#19376D',
+        thirdColor: '#A5D7E8',
+        textColor: '#19376D',
+        textCodeColor: '#ffffff'}
+      console.log(this.userColors)
+    }
 
 
     const code = this.retrieveLocal('code');
@@ -211,5 +228,6 @@ export class EditorComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 }

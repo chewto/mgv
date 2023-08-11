@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Colors } from '@interfaces/colors.interface';
 import { BehaviorSubject } from 'rxjs';
+import { ColorsLocalService } from 'src/app/shared/services/colors-local.service';
 
 @Component({
   selector: 'app-personalization',
@@ -17,7 +18,8 @@ export class PersonalizationComponent implements OnInit{
 
   constructor(
     private readonly fb:FormBuilder,
-    private readonly router:Router
+    private readonly router:Router,
+    public colors:ColorsLocalService
   ){}
 
   colorsForm = this.fb.group({
@@ -29,11 +31,13 @@ export class PersonalizationComponent implements OnInit{
   })
 
   ngOnInit(): void {
-    let userSettings = this.localStorage.getItem('userColors');
+    const userSettings = this.colors.retriveLocal('userColors');
+    console.log(userSettings)
+
     if(userSettings){
       let userColors = JSON.parse(userSettings);
       this.userColors = userColors;
-      let {firstColor, secondColor, thirdColor, fourthColor, textColor, textCodeColor} = userColors;
+      let {firstColor, secondColor, thirdColor, textColor, textCodeColor} = userColors;
       this.colorsForm.setValue({
         firstColor: firstColor,
         secondColor: secondColor,
@@ -42,6 +46,16 @@ export class PersonalizationComponent implements OnInit{
         textCodeColor: textCodeColor
       })
       console.log(userColors)
+    }
+
+    if(userSettings === null){
+      this.userColors = {
+        firstColor: '#0B2447',
+        secondColor: '#19376D',
+        thirdColor: '#A5D7E8',
+        textColor: '#19376D',
+        textCodeColor: '#ffffff'}
+      console.log(this.userColors)
     }
   }
 
